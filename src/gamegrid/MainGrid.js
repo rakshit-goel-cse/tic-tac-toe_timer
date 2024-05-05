@@ -1,10 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GameBox from "./GameBox";
+import checkWin from "./VerifyGameOver";
 
-
-export default function MainGrid({id,size,data,setdata,wait}){
+let emptyArray=[[0,0,0],
+[0,0,0],
+[0,0,0]];
+export default function MainGrid({id,size,wait}){
    
     const [player, setplayer] = useState(1);
+    const [data, setdata] = useState(emptyArray);
+    const [gameover, setgameover] = useState(false);
+
+    useEffect(() => {
+        if(gameover){
+
+            const timerId = setTimeout(() => {
+                console.log("Win")
+                alert("Player "+player + " Win");
+                setgameover(false);
+                setplayer(1);
+                setdata(emptyArray);
+            }, 1);
+        }
+    }, [gameover]);
+    
 
   const setData=(x,y,changePlayer)=>{
     //making sure using previous state in case of timeout wait
@@ -24,7 +43,13 @@ export default function MainGrid({id,size,data,setdata,wait}){
 
       // Update the player if necessary
       if (changePlayer) {
-          setplayer(player === 1 ? 2 : 1);
+        //checking for win
+            if(!gameover && checkWin(newData)){
+                setgameover(true);
+            }
+            else{
+            setplayer(player === 1 ? 2 : 1);
+            }
       }
       return newData;
   });
@@ -56,6 +81,8 @@ export default function MainGrid({id,size,data,setdata,wait}){
     }
 
     return (
+        <>
+        <div style={{ width: size, display: "flex", justifyContent: "center", alignItems: "center",marginBottom:20 }}>Player {player} Chance</div>
         <div style={{
             display:"flex",
             flex:1,
@@ -69,5 +96,6 @@ export default function MainGrid({id,size,data,setdata,wait}){
             {getRow(id+"2",1)}
             {getRow(id+"3",2)}
         </div>
+        </>
     );
 }
