@@ -12,11 +12,12 @@ export default function MainGrid({ id, size, value }) {
   const [data, setdata] = useState(emptyArray);
   const [gameover, setgameover] = useState(false);
   const [waitAdd, setwaitAdd] = useState(0);
-  
+  let timerId1=null;
+
     let game=value.game;
 useEffect(() => {
-    if(game==='game1'){
-    const timerId1 = setTimeout(() => {
+    if(game==='game1' || game==='game3'){
+    timerId1 = setTimeout(() => {
         console.log("waitadd imm- ",waitAdd);
         if(waitAdd>0){
             setwaitAdd(waitAdd-1000);
@@ -38,6 +39,10 @@ useEffect(() => {
         setplayer(1);
         setdata(emptyArray);
       }, 1);
+      if(null!=timerId1){
+      clearTimeout(timerId1);
+      }
+      //clearTimeout(timerId);
     }
   }, [gameover]);
 

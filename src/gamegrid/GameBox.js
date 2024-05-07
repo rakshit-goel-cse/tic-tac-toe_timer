@@ -1,47 +1,64 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 let chances=[];
-
-
 
 export default function GameBox({id,data,x,y,setData,value,gameover,waitAdd,setwaitAdd}){
     
     let wait=value.wait;
     let game=value.game;
+    const [timerId, settimerId] = useState(null);
+      
+
+    useEffect(() => {
+        console.log("timeclear",gameover,timerId)
+        if(gameover && null!==timerId){
+            
+            clearTimeout(timerId);
+        }
+    }, [gameover])
     
 
     //delete one change in 5 sec
     const game1=()=>{
         chances.push([x,y]);
-        
         console.log("game1-  ",chances,waitAdd);
         
-
-            const timerId = setTimeout(() => {
+            let temptimerId = setTimeout(() => {
                 console.log("timm")
                 if (chances.length > 0) {
                     let pos = chances.shift();
                     setData(...pos, false);
                 }
-                if (gameover) {
-                    clearTimeout(timerId);
-                }
+
             },wait+ waitAdd);
+            settimerId(temptimerId);
             setwaitAdd(waitAdd+wait);
             
     }
     //delete each change in 5 sec
     const game2=()=>{
-        const timerId = setTimeout(() => {
+        let temptimerId = setTimeout(() => {
             // Update the state after 1 second
             setData(x,y,false);
         }, wait);
-        if(gameover){
-            clearTimeout(timerId);
-        }   
+        settimerId(temptimerId);
+  
     }
     const game3=()=>{
+        chances.push([x,y]);
+        console.log("game1-  ",chances,waitAdd);
         
+            let temptimerId = setTimeout(() => {
+                console.log("timm")
+                if (chances.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * chances.length);
+                    let pos= chances.splice(randomIndex, 1)[0];
+                    setData(...pos, false);
+                }
+
+            },wait+ waitAdd);
+            settimerId(temptimerId);
+            setwaitAdd(waitAdd+wait);
     }
 
     const performTouch=(id)=>{
@@ -72,7 +89,7 @@ export default function GameBox({id,data,x,y,setData,value,gameover,waitAdd,setw
             
         {data[x][y] === 1 && "X"}
         {data[x][y] === 2 && "O"}
-        
+        {}
         </div>
     );
 }
