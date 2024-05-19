@@ -134,7 +134,7 @@ useEffect(() => {
   };
 
   return (
-    <>
+    <div style={{display:"flex",flex:'1',flexDirection:"column", justifyContent:"center",alignItems:"center"}}>
       <div
         style={{
           width: size,
@@ -162,6 +162,6 @@ useEffect(() => {
         {getRow(id + "2", 1)}
         {getRow(id + "3", 2)}
       </div>
-    </>
+    </div>
   );
 }
