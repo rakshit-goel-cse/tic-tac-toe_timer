@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 let chances=[];
 
@@ -6,14 +6,13 @@ export default function GameBox({id,data,x,y,setData,value,gameover,waitAdd,setw
     
     let wait=value.wait;
     let game=value.game;
-    const [timerId, settimerId] = useState(null);
+    const timerId = useRef(null);
       
 
     useEffect(() => {
-        console.log("timeclear",gameover,timerId)
-        if(gameover && null!==timerId){
-            
-            clearTimeout(timerId);
+        console.log("timeclear",gameover,timerId.current)
+        if(gameover && null!==timerId.current){
+            clearTimeout(timerId.current);
         }
     }, [gameover])
     
@@ -31,7 +30,7 @@ export default function GameBox({id,data,x,y,setData,value,gameover,waitAdd,setw
                 }
 
             },wait+ waitAdd);
-            settimerId(temptimerId);
+            timerId.current=temptimerId;
             setwaitAdd(waitAdd+wait);
             
     }
@@ -41,7 +40,7 @@ export default function GameBox({id,data,x,y,setData,value,gameover,waitAdd,setw
             // Update the state after 1 second
             setData(x,y,false);
         }, wait);
-        settimerId(temptimerId);
+        timerId.current=temptimerId;
   
     }
     const game3=()=>{
@@ -57,7 +56,7 @@ export default function GameBox({id,data,x,y,setData,value,gameover,waitAdd,setw
                 }
 
             },wait+ waitAdd);
-            settimerId(temptimerId);
+            timerId.current=temptimerId;
             setwaitAdd(waitAdd+wait);
     }
 

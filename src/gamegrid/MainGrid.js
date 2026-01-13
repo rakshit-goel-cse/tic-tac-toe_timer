@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import GameBox from "./GameBox";
 import checkWin from "./VerifyGameOver";
 
@@ -12,12 +12,13 @@ export default function MainGrid({ id, size, value }) {
   const [data, setdata] = useState(emptyArray);
   const [gameover, setgameover] = useState(false);
   const [waitAdd, setwaitAdd] = useState(0);
-  let timerId1=null;
+  const timerId1=useRef(null);
 
-    let game=value.game;
+  const game=value.game;
+  
 useEffect(() => {
     if(game==='game1' || game==='game3'){
-    timerId1 = setTimeout(() => {
+    timerId1.current = setTimeout(() => {
         console.log("waitadd imm- ",waitAdd);
         if(waitAdd>0){
             setwaitAdd(waitAdd-1000);
@@ -25,24 +26,23 @@ useEffect(() => {
     }, 1000);
 
   return () => {
-    clearTimeout(timerId1);
+    clearTimeout(timerId1.current);
   }
 }
 }, [waitAdd])
 
   useEffect(() => {
     if (gameover) {
-      const timerId = setTimeout(() => {
+      setTimeout(() => {
         console.log("Win");
         alert("Player " + player + " Win");
         setgameover(false);
         setplayer(1);
         setdata(emptyArray);
       }, 1);
-      if(null!=timerId1){
-      clearTimeout(timerId1);
+      if(null!=timerId1.current){
+      clearTimeout(timerId1.current);
       }
-      //clearTimeout(timerId);
     }
   }, [gameover]);
 
