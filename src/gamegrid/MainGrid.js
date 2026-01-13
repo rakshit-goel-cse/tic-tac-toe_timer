@@ -13,11 +13,16 @@ export default function MainGrid({ id, size, value }) {
   const [gameover, setgameover] = useState(false);
   const [waitAdd, setwaitAdd] = useState(0);
   const timerId1=useRef(null);
-
-  const game=value.game;
   
+const gameRef = useRef(value.game);
+
 useEffect(() => {
-    if(game==='game1' || game==='game3'){
+  gameRef.current = value.game;
+}, [value.game]);
+
+
+useEffect(() => {
+    if(gameRef.current === 'game1' || gameRef.current === 'game3'){
     timerId1.current = setTimeout(() => {
         console.log("waitadd imm- ",waitAdd);
         if(waitAdd>0){
@@ -44,7 +49,7 @@ useEffect(() => {
       clearTimeout(timerId1.current);
       }
     }
-  }, [gameover]);
+  }, [gameover,player]);
 
   const setData = (x, y, changePlayer) => {
     //making sure using previous state in case of timeout wait
