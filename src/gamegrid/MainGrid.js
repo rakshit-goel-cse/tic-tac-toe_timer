@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import GameBox from "./GameBox";
 import checkWin from "./VerifyGameOver";
 
@@ -12,12 +12,53 @@ export default function MainGrid({ id, size, value }) {
   const [data, setdata] = useState(emptyArray);
   const [gameover, setgameover] = useState(false);
   const [waitAdd, setwaitAdd] = useState(0);
-  let timerId1=null;
+  const timerId1=useRef(null);
 
-    let game=value.game;
+  //time for a player to make a move
+  const [playerMoveTime,setPlayerMoveTime] = useState(value.playerMoveTime/1000);
+  const playerTimeoutRef = useRef(null);
+  
+const gameRef = useRef(value.game);
+
+
+// reset timer on game change
+  useEffect(() => {
+    if (data === emptyArray) {
+      clearTimeout(playerTimeoutRef.current);
+      playerTimeoutRef.current = null;
+    }
+    else if (null === playerTimeoutRef.current) {
+      playerTimeoutRef.current = setInterval(() => {
+        setPlayerMoveTime(prevData => {
+          if (playerMoveTime < 1) {
+            setplayer(prevData => prevData === 1 ? 2 : 1);
+            return (value.playerMoveTime / 1000);
+          }
+          return prevData - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+    clearInterval(playerTimeoutRef.current);
+    playerTimeoutRef.current = null;
+  };
+
+  }, [data, player, playerMoveTime,value.playerMoveTime])
+
 useEffect(() => {
-    if(game==='game1' || game==='game3'){
-    timerId1 = setTimeout(() => {
+  gameRef.current = value.game;
+  //reset game
+  setgameover(false);
+  setplayer(1);
+  setdata(emptyArray);
+  setwaitAdd(0);
+}, [value.game]);
+
+
+useEffect(() => {
+    if(gameRef.current === 'game1' || gameRef.current === 'game3'){
+    timerId1.current = setTimeout(() => {
         console.log("waitadd imm- ",waitAdd);
         if(waitAdd>0){
             setwaitAdd(waitAdd-1000);
@@ -25,26 +66,25 @@ useEffect(() => {
     }, 1000);
 
   return () => {
-    clearTimeout(timerId1);
+    clearTimeout(timerId1.current);
   }
 }
 }, [waitAdd])
 
   useEffect(() => {
     if (gameover) {
-      const timerId = setTimeout(() => {
+      setTimeout(() => {
         console.log("Win");
         alert("Player " + player + " Win");
         setgameover(false);
         setplayer(1);
         setdata(emptyArray);
       }, 1);
-      if(null!=timerId1){
-      clearTimeout(timerId1);
+      if(null!=timerId1.current){
+      clearTimeout(timerId1.current);
       }
-      //clearTimeout(timerId);
     }
-  }, [gameover]);
+  }, [gameover,player]);
 
   const setData = (x, y, changePlayer) => {
     //making sure using previous state in case of timeout wait
@@ -69,6 +109,7 @@ useEffect(() => {
           setgameover(true);
         } else {
           setplayer(player === 1 ? 2 : 1);
+          setPlayerMoveTime(value.playerMoveTime/1000);
         }
       }
       return newData;
@@ -144,7 +185,7 @@ useEffect(() => {
           marginBottom: 20,
         }}
       >
-        Player {player} Chance
+        Player {player} Chance time remaining - {playerMoveTime}
       </div>
       <div
         style={{
