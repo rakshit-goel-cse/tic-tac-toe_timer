@@ -18,6 +18,11 @@ const gameRef = useRef(value.game);
 
 useEffect(() => {
   gameRef.current = value.game;
+  //reset game
+  setgameover(false);
+  setplayer(1);
+  setdata(emptyArray);
+  setwaitAdd(0);
 }, [value.game]);
 
 

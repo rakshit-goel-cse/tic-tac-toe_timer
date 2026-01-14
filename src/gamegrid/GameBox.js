@@ -14,7 +14,7 @@ export default function GameBox({id,data,x,y,setData,value,gameover,waitAdd,setw
         if(gameover && null!==timerId.current){
             clearTimeout(timerId.current);
         }
-    }, [gameover])
+    }, [gameover,game])
     
 
     //delete one change in 5 sec
