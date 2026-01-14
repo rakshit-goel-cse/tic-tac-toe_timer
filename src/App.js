@@ -1,12 +1,14 @@
 
 
-import { useState } from 'react';
+import { useState,useRef } from 'react';
 import './App.css';
 import MainGrid from './gamegrid/MainGrid.js';
 
 function App() {
   const [gameType, setgameType] = useState('game1');
-  const [wait,setWait] = useState(5);
+  const waitRef = useRef(5);
+  const playerMoveChange = useRef(3);
+  
   let size=500;
 
   const gameDetail=()=>{
@@ -36,41 +38,56 @@ function App() {
   };
 
   return (
-    <div style={{justifyContent:"center",alignItems:"center",padding:10}}>
-    
-    <div style={{display:"flex",flex:2,justifyContent:"space-around"}}>
-      <label>Fade out time</label>
-      
-      <div style={{display:"flex",flexDirection:"column",width:"250px",maxWidth:"250px"}}>
-      <input type='number' width={60} value={wait} min={1} max={10}
-      onChange={(e)=>{
-        const value = parseInt(e.currentTarget.value, 10);
-    if (value >= 1 && value <= 10) {
-      setWait(value);
-    }
-    else if(isNaN(value)){
-      setWait(0);
-    }
-    
-      }}/>
-    {wait<1 && <label>Time need to be greater then 0</label>}
-    </div>
+    <div style={{ justifyContent: "center", alignItems: "center", padding: 10 }}>
+      <div style={{ display: "flex", flex: 2, justifyContent: "space-around" }}>
+        
+        {/* setting fade out time */}
+        <label>Fade out time</label>
+        <div style={{ display: "flex", flexDirection: "column", width: "250px", maxWidth: "250px" }}>
+          <input type='number' width={60} value={waitRef.current} min={1} max={10}
+            onChange={(e) => {
+              const value = parseInt(e.currentTarget.value, 10);
+              if (value >= 1 && value <= 10) {
+                waitRef.current = value;
+              }
+              else if (isNaN(value)) {
+                waitRef.current = 0;
+              }
+            }} />
+          {waitRef.current < 1 && <label>Time need to be greater then 0</label>}
+        </div>
 
-      <button className='button' onClick={()=>handleReset()}>Reset</button>
-    </div>
+        {/* setting player Move Time time */}
+        <label>Player Change Time</label>
+        <div style={{ display: "flex", flexDirection: "column", width: "250px", maxWidth: "250px" }}>
+          <input type='number' width={60} value={playerMoveChange.current} min={1} max={10}
+            onChange={(e) => {
+              const value = parseInt(e.currentTarget.value, 10);
+              if (value >= 1 && value <= 10) {
+                playerMoveChange.current = value;
+              }
+              else if (isNaN(value)) {
+                playerMoveChange.current = 0;
+              }
+            }} />
+          {playerMoveChange.current < 1 && <label>Time need to be greater then 0</label>}
+        </div>
 
-    <div style={{margin:10,flex:7,display:'flex',minWidth:"100%",minHeight:500}}>
-    <MainGrid id={1} size={size} value={{game:gameType,wait:wait*1000}}/>
-    <div style={{flex:1 ,display:"flex", justifyContent:"center",alignItems:"center",padding:10}} >
-      {gameDetail()}
+        <button className='button' onClick={() => handleReset()}>Reset</button>
       </div>
-    </div>
-    
-    <div style={{display:"flex",flex:2,flexDirection:"row",justifyContent:"space-around",minWidth:size,marginTop:"20px"}}>
-      <button className="button" onClick={()=>setgameType('game1')}>Game 1</button>
-      <button className="button" onClick={()=>setgameType('game2')}>Game 2</button>
-      <button className="button" onClick={()=>setgameType('game3')}>Game 3</button>
-    </div>
+
+      <div style={{ margin: 10, flex: 7, display: 'flex', minWidth: "100%", minHeight: 500 }}>
+        <MainGrid id={1} size={size} value={{ game: gameType, wait: waitRef.current * 1000 , playerMoveTime:playerMoveChange.current * 1000 }} />
+        <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", padding: 10 }} >
+          {gameDetail()}
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flex: 2, flexDirection: "row", justifyContent: "space-around", minWidth: size, marginTop: "20px" }}>
+        <button className="button" onClick={() => setgameType('game1')}>Game 1</button>
+        <button className="button" onClick={() => setgameType('game2')}>Game 2</button>
+        <button className="button" onClick={() => setgameType('game3')}>Game 3</button>
+      </div>
 
     </div>
   );

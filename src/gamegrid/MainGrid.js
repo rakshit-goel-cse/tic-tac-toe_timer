@@ -13,8 +13,38 @@ export default function MainGrid({ id, size, value }) {
   const [gameover, setgameover] = useState(false);
   const [waitAdd, setwaitAdd] = useState(0);
   const timerId1=useRef(null);
+
+  //time for a player to make a move
+  const [playerMoveTime,setPlayerMoveTime] = useState(value.playerMoveTime/1000);
+  const playerTimeoutRef = useRef(null);
   
 const gameRef = useRef(value.game);
+
+
+// reset timer on game change
+  useEffect(() => {
+    if (data == emptyArray) {
+      clearTimeout(playerTimeoutRef.current);
+      playerTimeoutRef.current = null;
+    }
+    else if (null === playerTimeoutRef.current) {
+      playerTimeoutRef.current = setInterval(() => {
+        setPlayerMoveTime(prevData => {
+          if (playerMoveTime < 1) {
+            setplayer(prevData => prevData == 1 ? 2 : 1);
+            return (value.playerMoveTime / 1000);
+          }
+          return prevData - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+    clearInterval(playerTimeoutRef.current);
+    playerTimeoutRef.current = null;
+  };
+
+  }, [data, player, playerMoveTime])
 
 useEffect(() => {
   gameRef.current = value.game;
@@ -79,6 +109,7 @@ useEffect(() => {
           setgameover(true);
         } else {
           setplayer(player === 1 ? 2 : 1);
+          setPlayerMoveTime(value.playerMoveTime/1000);
         }
       }
       return newData;
@@ -154,7 +185,7 @@ useEffect(() => {
           marginBottom: 20,
         }}
       >
-        Player {player} Chance
+        Player {player} Chance time remaining - {playerMoveTime}
       </div>
       <div
         style={{
