@@ -133,7 +133,7 @@ useEffect(() => {
           height: "32%",
           flexDirection: "row",
           justifyContent: "space-around",
-          background: "black",
+          // background: "transpe",
           borderRadius: "20%",
         }}
       >
@@ -176,24 +176,44 @@ useEffect(() => {
 
   return (
     <div style={{display:"flex",flex:'1',flexDirection:"column", justifyContent:"center",alignItems:"center"}}>
-      <div
+      <h2
         style={{
           width: size,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: 20,
+          marginBottom: 20
         }}
       >
-        Player {player} Chance time remaining - {playerMoveTime}
-      </div>
+        Player {player}
+      </h2>
+
+      {/* Time bar */}
+      <div style={{
+  width: "100%",
+  height: "12px",
+  background: "rgba(255,255,255,0.15)",
+  borderRadius: "10px",
+  overflow: "hidden",
+  marginBottom: "12px"
+}}>
+  <div
+    style={{
+      height: "100%",
+      width: `${(playerMoveTime / value.playerMoveTime) * 100000}%`,
+      background: "linear-gradient(90deg, #22d3ee, #6366f1)",
+      transition: "width 1s linear"
+    }}
+  />
+</div>
+
       <div
         style={{
           display: "flex",
           flex: 1,
           width: size,
           height: size,
-          background: "black",
+          background: "rgba(102, 188, 245, 0.62)",
           justifyContent: "space-evenly",
           flexDirection: "column",
           borderRadius: "5%",
