@@ -23,7 +23,7 @@ const gameRef = useRef(value.game);
 
 // reset timer on game change
   useEffect(() => {
-    if (data == emptyArray) {
+    if (data === emptyArray) {
       clearTimeout(playerTimeoutRef.current);
       playerTimeoutRef.current = null;
     }
@@ -31,7 +31,7 @@ const gameRef = useRef(value.game);
       playerTimeoutRef.current = setInterval(() => {
         setPlayerMoveTime(prevData => {
           if (playerMoveTime < 1) {
-            setplayer(prevData => prevData == 1 ? 2 : 1);
+            setplayer(prevData => prevData === 1 ? 2 : 1);
             return (value.playerMoveTime / 1000);
           }
           return prevData - 1;
@@ -44,7 +44,7 @@ const gameRef = useRef(value.game);
     playerTimeoutRef.current = null;
   };
 
-  }, [data, player, playerMoveTime])
+  }, [data, player, playerMoveTime,value.playerMoveTime])
 
 useEffect(() => {
   gameRef.current = value.game;
