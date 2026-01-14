@@ -37,59 +37,73 @@ function App() {
     window.location.reload();
   };
 
-  return (
-    <div style={{ justifyContent: "center", alignItems: "center", padding: 10 }}>
-      <div style={{ display: "flex", flex: 2, justifyContent: "space-around" }}>
-        
-        {/* setting fade out time */}
-        <label>Fade out time</label>
-        <div style={{ display: "flex", flexDirection: "column", width: "250px", maxWidth: "250px" }}>
-          <input type='number' width={60} value={waitRef.current} min={1} max={10}
-            onChange={(e) => {
-              const value = parseInt(e.currentTarget.value, 10);
-              if (value >= 1 && value <= 10) {
-                waitRef.current = value;
-              }
-              else if (isNaN(value)) {
-                waitRef.current = 0;
-              }
-            }} />
-          {waitRef.current < 1 && <label>Time need to be greater then 0</label>}
-        </div>
+  return (<>
+    {/* ---------- TOP BAR ---------- */}
+<div className="top-bar">
 
-        {/* setting player Move Time time */}
-        <label>Player Change Time</label>
-        <div style={{ display: "flex", flexDirection: "column", width: "250px", maxWidth: "250px" }}>
-          <input type='number' width={60} value={playerMoveChange.current} min={1} max={10}
-            onChange={(e) => {
-              const value = parseInt(e.currentTarget.value, 10);
-              if (value >= 1 && value <= 10) {
-                playerMoveChange.current = value;
-              }
-              else if (isNaN(value)) {
-                playerMoveChange.current = 0;
-              }
-            }} />
-          {playerMoveChange.current < 1 && <label>Time need to be greater then 0</label>}
-        </div>
+  <div className="control-group">
+    <label>Fade Out Time</label>
+    <input
+      type="number"
+      value={waitRef.current}
+      min={1}
+      max={10}
+      onChange={(e) => {
+        const value = parseInt(e.currentTarget.value, 10);
+        waitRef.current = isNaN(value) ? 0 : Math.max(1, Math.min(10, value));
+      }}
+    />
+    {waitRef.current < 1 && <label>Time must be greater than 0</label>}
+  </div>
 
-        <button className='button' onClick={() => handleReset()}>Reset</button>
-      </div>
+  <div className="control-group">
+    <label>Player Change Time</label>
+    <input
+      type="number"
+      value={playerMoveChange.current}
+      min={1}
+      max={10}
+      onChange={(e) => {
+        const value = parseInt(e.currentTarget.value, 10);
+        playerMoveChange.current = isNaN(value) ? 0 : Math.max(1, Math.min(10, value));
+      }}
+    />
+    {playerMoveChange.current < 1 && <label>Time must be greater than 0</label>}
+  </div>
 
-      <div style={{ margin: 10, flex: 7, display: 'flex', minWidth: "100%", minHeight: 500 }}>
-        <MainGrid id={1} size={size} value={{ game: gameType, wait: waitRef.current * 1000 , playerMoveTime:playerMoveChange.current * 1000 }} />
-        <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", padding: 10 }} >
-          {gameDetail()}
-        </div>
-      </div>
+  <button className="button" onClick={handleReset}>
+    Reset
+  </button>
+</div>
 
-      <div style={{ display: "flex", flex: 2, flexDirection: "row", justifyContent: "space-around", minWidth: size, marginTop: "20px" }}>
-        <button className="button" onClick={() => setgameType('game1')}>Game 1</button>
-        <button className="button" onClick={() => setgameType('game2')}>Game 2</button>
-        <button className="button" onClick={() => setgameType('game3')}>Game 3</button>
-      </div>
+{/* ---------- MAIN AREA ---------- */}
+<div className="main-area">
 
-    </div>
+  <div className="grid-wrapper">
+    <MainGrid
+      id={1}
+      size={size}
+      value={{
+        game: gameType,
+        wait: waitRef.current * 1000,
+        playerMoveTime: playerMoveChange.current * 1000
+      }}
+    />
+  </div>
+
+  <div className="game-info">
+    {gameDetail()}
+  </div>
+
+</div>
+
+{/* ---------- GAME SWITCH ---------- */}
+<div className="game-switch">
+  <button className="button" onClick={() => setgameType("game1")}>Game 1</button>
+  <button className="button" onClick={() => setgameType("game2")}>Game 2</button>
+  <button className="button" onClick={() => setgameType("game3")}>Game 3</button>
+</div>
+</>
   );
 }
 

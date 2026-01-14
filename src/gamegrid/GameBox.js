@@ -81,9 +81,27 @@ export default function GameBox({id,data,x,y,setData,value,gameover,waitAdd,setw
     }
     return(
         <div id={id} 
-        style={{display:"flex",background:"white",width:"32%"
-                ,alignItems:"center",justifyContent:"center",
-                borderRadius:"20%"}} 
+        style={{
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "30%",
+//   marginLeft: "20%",
+  aspectRatio: "1",
+  background: "linear-gradient(135deg, #e0f2fe, #c7d2fe)",
+  borderRadius: "20px",
+  boxShadow: `
+    inset 0 0 0 2px rgba(255,255,255,0.6),
+    0 10px 30px rgba(59,130,246,0.6)
+  `,
+  fontSize: "48px",
+  fontWeight: "700",
+  color: "#1e293b",
+  cursor: "pointer",
+  transition: "transform 0.15s, box-shadow 0.15s",
+//   onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"},
+//   onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+}} 
         onClick={()=>performTouch(id)}>
             
         {data[x][y] === 1 && "X"}
